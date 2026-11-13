@@ -1,425 +1,358 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Fernhollow — Regenerative Design Studio</title>
-<meta name="description" content="A regenerative design studio. Wander through a night valley of flowers that grows as you move.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400&family=Manrope:wght@400;500&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Structural Integrity & Wife Support Control Center</title>
 <style>
   :root {
-    --u: min(calc(100vw / 1600), calc(100vh / 900));
-    --cream: #f5efe2;
-    --cream-dim: rgba(245, 239, 226, 0.65);
-    --dark: #070908;
-    --pill-text: #151510;
-    --gold-glow: #d4af37;
+    --blueprint-bg: #0a192f;
+    --blueprint-grid: rgba(100, 255, 218, 0.08);
+    --safety-yellow: #ffb703;
+    --alert-red: #e63946;
+    --coffee-brown: #4a2c2a;
+    --text-light: #e6f1ff;
+    --cyan-accent: #64ffda;
   }
 
-  * {
-    box-sizing: border-box;
+  * { box-sizing: border-box; font-family: 'Courier New', Courier, monospace; }
+
+  body {
     margin: 0;
-    padding: 0;
+    background-color: var(--blueprint-bg);
+    background-image: 
+      linear-gradient(var(--blueprint-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--blueprint-grid) 1px, transparent 1px);
+    background-size: 25px 25px;
+    color: var(--text-light);
+    min-height: 100vh;
+    overflow-x: hidden;
   }
 
-  html, body {
-    height: 100%;
-    background: #030404;
-    overflow: hidden;
-    color: var(--cream);
-    font-family: 'Manrope', system-ui, sans-serif;
-    -webkit-font-smoothing: antialiased;
+  .hazard-bar {
+    height: 14px;
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--safety-yellow),
+      var(--safety-yellow) 15px,
+      #111 15px,
+      #111 30px
+    );
+  }
+
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 2;
+  }
+
+  header {
+    border: 2px solid var(--cyan-accent);
+    background: rgba(10, 25, 47, 0.9);
+    padding: 15px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 0 15px rgba(100, 255, 218, 0.2);
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: var(--safety-yellow);
+    text-transform: uppercase;
+  }
+
+  .status-badge {
+    display: inline-block;
+    background: var(--alert-red);
+    color: white;
+    padding: 4px 10px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    margin-top: 8px;
+    animation: blink 1.2s infinite;
+  }
+
+  @keyframes blink { 50% { opacity: 0.4; } }
+
+  /* Gauges */
+  .gauges {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 25px;
+  }
+
+  .gauge-card {
+    border: 1px solid var(--cyan-accent);
+    background: rgba(17, 34, 64, 0.85);
+    padding: 10px;
+    text-align: center;
+  }
+
+  .gauge-val {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--safety-yellow);
+    margin-top: 5px;
+  }
+
+  /* SOS Buttons */
+  .sos-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .sos-btn {
+    border: 2px solid;
+    padding: 18px;
+    text-align: left;
+    cursor: pointer;
+    background: rgba(17, 34, 64, 0.95);
+    color: white;
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative;
+  }
+
+  .sos-btn:hover { transform: translateY(-2px); }
+
+  .btn-red { border-color: var(--alert-red); box-shadow: 0 0 10px rgba(230, 57, 70, 0.3); }
+  .btn-yellow { border-color: var(--safety-yellow); box-shadow: 0 0 10px rgba(255, 183, 3, 0.3); }
+  .btn-cyan { border-color: var(--cyan-accent); box-shadow: 0 0 10px rgba(100, 255, 218, 0.2); }
+
+  .sos-tag {
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 2px 6px;
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+  .tag-red { background: var(--alert-red); }
+  .tag-yellow { background: var(--safety-yellow); color: #111; }
+  .tag-cyan { background: var(--cyan-accent); color: #111; }
+
+  .sos-title { font-size: 1.1rem; font-weight: bold; margin: 4px 0; }
+  .sos-desc { font-size: 0.85rem; opacity: 0.85; margin: 0; }
+
+  /* Interactive Modal / Display Panel */
+  .panel {
+    display: none;
+    margin-top: 25px;
+    border: 2px solid var(--safety-yellow);
+    background: #112240;
+    padding: 20px;
+    text-align: center;
+  }
+
+  /* Photo Slideshow */
+  .photo-frame {
+    border: 3px dashed var(--cyan-accent);
+    padding: 10px;
+    margin: 15px auto;
+    max-width: 420px;
+    background: #0a192f;
+  }
+
+  .photo-frame img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .photo-caption {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: var(--safety-yellow);
+  }
+
+  .nav-btns {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .action-btn {
+    background: var(--cyan-accent);
+    color: #0a192f;
+    border: none;
+    padding: 10px 16px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 10px;
+  }
+
+  .whatsapp-btn {
+    background: #25D366;
+    color: #fff;
+  }
+
+  /* Coffee Blast Animation Elements */
+  .coffee-particle {
+    position: fixed;
+    font-size: 2.5rem;
+    z-index: 9999;
+    pointer-events: none;
     user-select: none;
   }
 
-  a { color: inherit; text-decoration: none; }
-  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
-
-  /* Fullscreen 3D Canvas */
-  #valley {
+  #coffee-wave {
     position: fixed;
-    inset: 0;
-    z-index: 1;
-  }
-
-  /* Cinematic Vignette & Subtle Film Grain Overlay */
-  .vignette {
-    position: fixed;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-    background: radial-gradient(circle at center, transparent 42%, rgba(2, 4, 3, 0.85) 100%);
-    transition: opacity 0.6s ease;
-  }
-
-  /* Custom Luxury Cursor Ring */
-  .cursor-ring {
-    position: fixed;
-    top: 0;
+    bottom: -100%;
     left: 0;
-    width: 36px;
-    height: 36px;
-    border: 1px solid rgba(245, 239, 226, 0.4);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 99;
-    transform: translate(-50%, -50%);
-    transition: width 0.3s ease, height 0.3s ease, background 0.3s ease, border-color 0.3s ease;
-    mix-blend-mode: difference;
-  }
-  .cursor-ring.active {
-    width: 68px;
-    height: 68px;
-    background: rgba(245, 239, 226, 0.12);
-    border-color: var(--cream);
-  }
-
-  /* Loader Screen */
-  #loader {
-    position: fixed;
-    inset: 0;
-    z-index: 50;
-    background: #030404;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 18px;
-    transition: opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1), visibility 1.1s;
-  }
-  #loader.gone {
-    opacity: 0;
-    visibility: hidden;
-  }
-  .pulse-dot {
-    width: calc(10 * var(--u));
-    height: calc(10 * var(--u));
-    min-width: 9px;
-    min-height: 9px;
-    border-radius: 50%;
-    background: var(--cream);
-    animation: pulse 1.6s infinite ease-in-out;
-  }
-  .loader-label {
-    font-size: 11px;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    opacity: 0.55;
-  }
-  @keyframes pulse {
-    0%, 100% { transform: scale(0.8); opacity: 0.35; }
-    50% { transform: scale(1.4); opacity: 1; }
-  }
-
-  /* Main Interface Layer */
-  .ui {
-    position: fixed;
-    inset: 0;
-    z-index: 10;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 1.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .ui.on { opacity: 1; }
-  .ui a, .ui button { pointer-events: auto; }
-
-  /* Header */
-  header {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: calc(28 * var(--u)) calc(48 * var(--u)) 0;
-  }
-
-  .logo {
-    font-size: calc(26 * var(--u));
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .logo-mark {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--cream);
-    box-shadow: 0 0 12px var(--cream);
-  }
-
-  nav {
-    display: flex;
-    align-items: center;
-    gap: calc(44 * var(--u));
-    font-size: calc(14 * var(--u));
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-
-  nav button.nav-link {
-    position: relative;
-    padding: 4px 0;
-    transition: opacity 0.25s;
-  }
-  nav button.nav-link::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
     width: 100%;
-    height: 1px;
-    background: var(--cream);
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  nav button.nav-link:hover::after {
-    transform: scaleX(1);
-    transform-origin: left;
-  }
-
-  .pill {
-    display: inline-flex;
-    align-items: center;
-    height: calc(46 * var(--u));
-    padding: 0 calc(28 * var(--u));
-    border-radius: 99px;
-    background: var(--cream);
-    color: var(--pill-text);
-    font-weight: 500;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
-  }
-  .pill:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(245, 239, 226, 0.25);
-  }
-
-  /* Center Hero */
-  .hero {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 50%;
-    transform: translateY(-46%);
+    height: 100%;
+    background: rgba(74, 44, 42, 0.85);
+    z-index: 9998;
+    transition: bottom 1.2s ease-in-out;
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #fff;
     text-align: center;
-    padding: 0 20px;
-  }
-
-  .reveal-mask {
-    overflow: hidden;
-    padding-bottom: 6px;
-  }
-
-  h1 {
-    font: 400 calc(158 * var(--u))/0.92 'Antonio', 'Arial Narrow', sans-serif;
-    letter-spacing: -0.012em;
-    white-space: nowrap;
-    transform: translateY(105%);
-    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
-  }
-  .ui.on h1 {
-    transform: translateY(0);
-  }
-
-  .cap {
-    margin-top: calc(44 * var(--u));
-    font-size: calc(20 * var(--u));
-    line-height: 1.38;
-    color: var(--cream-dim);
-    opacity: 0;
-    transform: translateY(18px);
-    transition: opacity 1s ease 0.55s, transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.55s;
-  }
-  .ui.on .cap {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* Round Action Button */
-  .cta-wrap {
-    margin-top: calc(36 * var(--u));
-    opacity: 0;
-    transform: scale(0.85);
-    transition: opacity 1s ease 0.75s, transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.75s;
-  }
-  .ui.on .cta-wrap {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  #go {
-    width: calc(62 * var(--u));
-    height: calc(62 * var(--u));
-    min-width: 52px;
-    min-height: 52px;
-    border-radius: 50%;
-    border: 1.5px solid var(--cream);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.35s ease, color 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
-  }
-  #go svg {
-    width: calc(20 * var(--u));
-    height: calc(20 * var(--u));
-    min-width: 18px;
-    min-height: 18px;
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  #go:hover {
-    background: var(--cream);
-    color: var(--pill-text);
-    transform: scale(1.08);
-    box-shadow: 0 0 30px rgba(245, 239, 226, 0.35);
-  }
-  #go:hover svg {
-    transform: translateX(3px);
-  }
-
-  /* Bottom Bar */
-  .bottom-left {
-    position: absolute;
-    left: calc(48 * var(--u));
-    bottom: calc(44 * var(--u));
-    font-size: calc(12 * var(--u));
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    opacity: 0.5;
-  }
-
-  .bottom-right {
-    position: absolute;
-    right: calc(48 * var(--u));
-    bottom: calc(44 * var(--u));
-    display: flex;
-    align-items: center;
-    gap: calc(20 * var(--u));
-  }
-
-  .scroll-hint {
-    font-size: calc(12.5 * var(--u));
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    opacity: 0.8;
-  }
-
-  .divider {
-    width: 1px;
-    height: calc(26 * var(--u));
-    min-height: 20px;
-    background: rgba(245, 239, 226, 0.25);
-  }
-
-  #sound {
-    width: calc(32 * var(--u));
-    height: calc(32 * var(--u));
-    min-width: 28px;
-    min-height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.85;
-    transition: opacity 0.2s, transform 0.2s;
-  }
-  #sound:hover {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-
-  /* Luxury Slide-Over Studio Drawer */
-  .drawer-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 30;
-    background: rgba(3, 5, 4, 0.65);
-    backdrop-filter: blur(8px);
-    opacity: 0;
+    padding: 20px;
     pointer-events: none;
-    transition: opacity 0.5s ease;
   }
-  .drawer-backdrop.open {
-    opacity: 1;
-    pointer-events: auto;
+</style>
+</head>
+<body>
+
+<div class="hazard-bar"></div>
+
+<div class="container">
+  <header>
+    <h1>🏗️ Structural Integrity & Wife Support Control</h1>
+    <div class="status-badge">ALERT: HIGH MSc EXAM LOAD DETECTED</div>
+  </header>
+
+  <div class="gauges">
+    <div class="gauge-card">
+      <div>BRAIN STRESS</div>
+      <div class="gauge-val">9,850 kN</div>
+    </div>
+    <div class="gauge-card">
+      <div>DISTANCE GAP</div>
+      <div class="gauge-val">TOO FAR</div>
+    </div>
+    <div class="gauge-card">
+      <div>WIFE DEFICIT</div>
+      <div class="gauge-val">CRITICAL</div>
+    </div>
+  </div>
+
+  <div class="sos-grid">
+    <!-- Option 1: Missing Wife + Photo Vault -->
+    <button class="sos-btn btn-red" onclick="openMissingWife()">
+      <span class="sos-tag tag-red">CODE RED // PRIORITY 1</span>
+      <div class="sos-title">💔 Structural Failure: Missing Wife</div>
+      <p class="sos-desc">Foundation unstable due to living apart. Unlock visual reinforcement memories immediately.</p>
+    </button>
+
+    <!-- Option 2: Coffee Blast Animation -->
+    <button class="sos-btn btn-yellow" onclick="triggerCoffeeBlast()">
+      <span class="sos-tag tag-yellow">HAZARD LEVEL 5</span>
+      <div class="sos-title">☕ Low Concrete & Caffeine Slump</div>
+      <p class="sos-desc">Energy dropping below safety code. Initiate emergency high-pressure caffeine blast!</p>
+    </button>
+
+    <!-- Option 3: Exam Stress Relief -->
+    <button class="sos-btn btn-cyan" onclick="openExamBoost()">
+      <span class="sos-tag tag-cyan">SYSTEM OVERLOAD</span>
+      <div class="sos-title">📐 MSc Formula & Textbook Overload</div>
+      <p class="sos-desc">Mental load exceeds design capacity. Request structural inspection & wife encouragement.</p>
+    </button>
+  </div>
+
+  <!-- Dynamic Output Panel -->
+  <div id="output-panel" class="panel"></div>
+</div>
+
+<!-- Full Screen Coffee Wave Overlay -->
+<div id="coffee-wave">
+  <h1 style="font-size: 2rem; color: #ffb703;">☕ CAFFEINE INJECTION COMPLETE! ☕</h1>
+  <p style="font-size: 1.1rem; max-width: 500px;">500mg of virtual espresso delivered straight to your brain. You've got this, Engineer!</p>
+</div>
+
+<div class="hazard-bar" style="position: fixed; bottom: 0; width: 100%;"></div>
+
+<script>
+  // ==========================================
+  // 1. CUSTOMIZE YOUR PHOTOS & CAPTIONS HERE
+  // ==========================================
+  // Put your 4-5 image files in the same folder as this HTML file
+  // and replace the filenames below (e.g., "photo1.jpg").
+  const ourMemories = [
+    {
+      src: "photo1.jpg", 
+      caption: "Inspection #01: Load-bearing smile that keeps me going every day ❤️"
+    },
+    {
+      src: "photo2.jpg",
+      caption: "Inspection #02: Counting down the days until we're under the same roof again!"
+    },
+    {
+      src: "photo3.jpg",
+      caption: "Inspection #03: My favorite Civil Engineer — smartest & strongest man I know 🏗️"
+    },
+    {
+      src: "photo4.jpg",
+      caption: "Inspection #04: Post-exam date night pending... keep pushing, my love!"
+    },
+    {
+      src: "photo5.jpg",
+      caption: "Inspection #05: No matter the distance, I'm always right beside you 💕"
+    }
+  ];
+
+  // Optional: Add your WhatsApp number with country code (e.g., "94771234567") or leave blank ""
+  const wifeWhatsAppNumber = ""; 
+
+  let currentPhotoIndex = 0;
+
+  function getWhatsAppLink(message) {
+    const encoded = encodeURIComponent(message);
+    return wifeWhatsAppNumber 
+      ? `https://wa.me{wifeWhatsAppNumber}?text=${encoded}`
+      : `https://wa.me{encoded}`;
   }
 
-  .drawer {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: min(540px, 100vw);
-    z-index: 40;
-    background: rgba(11, 15, 13, 0.94);
-    border-left: 1px solid rgba(245, 239, 226, 0.14);
-    padding: 48px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transform: translateX(100%);
-    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-    pointer-events: auto;
-  }
-  .drawer.open {
-    transform: translateX(0);
+  // ==========================================
+  // OPTION 1: MISSING WIFE SLIDESHOW
+  // ==========================================
+  function openMissingWife() {
+    currentPhotoIndex = 0;
+    renderPhotoVault();
   }
 
-  .drawer-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(245, 239, 226, 0.12);
-    padding-bottom: 20px;
-  }
-  .drawer-tag {
-    font-size: 12px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    opacity: 0.6;
-  }
-  .close-btn {
-    font-size: 13px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    padding: 6px 14px;
-    border: 1px solid rgba(245, 239, 226, 0.25);
-    border-radius: 99px;
-    transition: background 0.25s, color 0.25s;
-  }
-  .close-btn:hover {
-    background: var(--cream);
-    color: var(--pill-text);
+  function renderPhotoVault() {
+    const panel = document.getElementById("output-panel");
+    const memory = ourMemories[currentPhotoIndex];
+    const waLink = getWhatsAppLink("🚨 SITE ALERT #ENG-LOVE: Structural failure detected because I miss my wife! Requesting an emergency call/voice note right now ❤️");
+
+    panel.style.display = "block";
+    panel.innerHTML = `
+      <h2 style="color: var(--alert-red); margin-top: 0;">🔓 STRUCTURAL MEMORY VAULT UNLOCKED</h2>
+      <p>Memory ${currentPhotoIndex + 1} of ${ourMemories.length}</p>
+      <div class="photo-frame">
+        <img src="${memory.src}" alt="Us Together" onerror="this.src='https://placeholder.com+(${memory.src})'">
+        <div class="photo-caption">${memory.caption}</div>
+      </div>
+      <div class="nav-btns">
+        <button class="action-btn" onclick="changePhoto(-1)">⬅️ Prev</button>
+        <button class="action-btn" onclick="changePhoto(1)">Next ➡️</button>
+      </div>
+      <br>
+      <a href="${waLink}" target="_blank" class="action-btn whatsapp-btn">📲 Send "I Miss You" Alert on WhatsApp</a>
+    `;
+    panel.scrollIntoView({ behavior: "smooth" });
   }
 
-  .drawer-body h2 {
-    font: 400 54px/0.98 'Antonio', sans-serif;
-    margin-bottom: 20px;
-  }
-  .drawer-body p {
-    font-size: 16px;
-    line-height: 1.65;
-    color: var(--cream-dim);
-    margin-bottom: 24px;
-  }
-  .project-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 12px;
-  }
-  .project-item {
-    padding: 16px 0;
-    border-top: 1px solid rgba(245, 239, 226, 0.12);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+  function changePhoto(step) {
